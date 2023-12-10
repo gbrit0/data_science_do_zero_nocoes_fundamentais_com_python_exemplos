@@ -114,3 +114,69 @@ def most_common_interests_with(user):
     )
 
 # print(most_common_interests_with(users[3]))
+
+#SALÁRIOS E EXPERIÊNCIA
+
+salaries_and_tenures = [
+    (83000, 8.7), (88000, 8.1),
+    (48000, 0.7), (76000, 6),
+    (69000, 6.5), (76000, 7.5),
+    (60000, 2.5), (83000, 10),
+    (48000, 1.9), (63000, 4.2)
+]
+
+# # IMPRESSÃO DO GRÁFICO:
+# salaries_and_tenures.sort(key=lambda salaries_and_tenures: salaries_and_tenures[1], # ordena a lista decrescentemente pelo tenure
+#                        reverse=True)
+
+# # Descompacte as tuplas em duas listas
+# salaries, tenures = zip(*salaries_and_tenures)
+
+# import matplotlib.pyplot as plt
+# plt.plot(tenures, salaries, 'o')  # Adicionando marcadores " marker='o' " para melhor visualização
+# plt.xlabel('Experiência (Anos)') # Rótulo eixo x
+# plt.ylabel('Salário ($/Ano)') # Rótulo eixo y
+# plt.title('Salário vs. Experiência') # Título do gráfico
+# plt.show() # Exibir o gráfico
+
+# As chaves são anos, os valores são listas de salários por anos de experiência.
+salary_by_tenure = defaultdict(list)
+
+for salary, tenure in salaries_and_tenures:
+    salary_by_tenure[tenure].append(salary)
+
+# print(salary_by_tenure)
+
+# As chaves são anos, cada valor é o salário médio associado ao número de anos de experiência.
+average_salary_by_tenure = { # -> Essa informação não parece muito útil já que os funcionários não tem os mesmos anos de experiência. Talvez seja melhor fazer buckets(agrupamentos) de experiências
+    tenure: sum(salaries) / len(salaries)
+    for tenure, salaries in salary_by_tenure.items()
+}
+
+# print(average_salary_by_tenure)
+
+def tenure_bucket(tenure):
+    if tenure < 2:
+        return "less than two"
+    elif tenure < 5:
+        return "between two and five"
+    else:
+        return "more than five"
+    
+# As chaves são buckets de anos de experiência, os valores são as listas de salary_by_tenure associadas ao bucket em questão
+salary_by_tenure_bucket = defaultdict(list)
+
+for salary, tenure in salaries_and_tenures:
+    bucket = tenure_bucket(tenure)
+    salary_by_tenure_bucket[bucket].append(salary)
+
+# print(salary_by_tenure_bucket)
+
+# E finalmente computamos a média salarial de cada bucket:
+
+# As chaves sçai buckets de anos de experiência, os valores são a média salarial do bucket em questão
+average_salary_by_bucket = {
+    tenure_bucket: sum(salaries) / len(salaries)
+    for tenure_bucket, salaries in salary_by_tenure_bucket.items()
+}
+# print(average_salary_by_bucket)
