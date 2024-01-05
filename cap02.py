@@ -177,3 +177,100 @@ for x in range(10):
 x = [4, 1, 3, 2]
 y = sorted(x)     # y agora é [1, 2, 3, 4], x não mudou
 x.sort()          # agora x é [1, 2, 3, 4]
+
+#COMPREENSÃO DE LISTAS
+# para transformar uma lista em outra, devemos selecionar alguns elementos, transformá-los ou fazer as duas coisas.
+#As compreensões de listas são a forma Pythonic de fazer isso
+
+#TESTES AUTOMATIZADOS A ASSERÇÃO
+def smallest_item(xs):
+   assert xs, "empty list has no smallest item"
+   return min(xs)
+
+assert smallest_item([10, 20, 5, 40]) == 5
+assert smallest_item([1, 0, -1, 2]) == -1
+
+#PROGRAMAÇÃO ORIENTADA A OBJETOS
+# definição de classes para encapsular dados e funções
+class CountingClicker:
+   """A classe pode/deve ter um docstring, como as funções"""
+   def __init__(self, count = 0):
+      self.count = count
+
+   def __repr__(self):
+      return f"CountingCLicker(count={self.count})"
+   
+   def click(self, num_times = 1):
+      """Clique no contador algumas vezes."""
+      self.count += num_times
+
+   def read(self):
+      return self.count
+   
+   def reset(self):
+      self.count = 0
+
+#usando o assert para escerever casos de test para o contador:
+clicker = CountingClicker()
+assert clicker.read() == 0, "clicker should start with count 0"
+clicker.click()
+clicker.click()
+assert clicker.read() == 2, "after two clicks, clicker should have count 2"
+clicker.reset()
+assert clicker.read() == 0, "after reset, clicker should be back to 0"
+
+#De vez em quando cria-se subclasses que herdam algumas funcionalidades de uma classe pai
+
+#A subclasse herda todo o comportamento da classe pai.
+class NoResetClicker(CountingClicker):
+   # Esta classe te os mesmos métodos da CountingClicker
+
+   # Mas seu método reset não faz nada.
+   def reset(self):
+      pass
+
+clicker2 = NoResetClicker()
+assert clicker2.read() == 0
+clicker2.click()
+assert clicker2.read() == 1
+clicker2.reset()
+assert clicker2.read() == 1, "reset shouldn't do anything"
+
+#ITERÁVEIS E GERADORES
+def generate_range(n):
+   i = 0;
+   while i < n:
+      yield i
+      i += 1
+
+for i in generate_range(10):
+   print(f"i: {i}")
+
+
+#também é possível criar geradores colocando compreensões de for entre parênteses:
+evens_bellow_20 = (i for i in generate_range(20) if i%2 == 0) #não faz nada até que a iteração seja promovida (usando for ou next)
+
+# a função enumerate() transforma valores de uma lista em paras (index, value):
+
+names = ["Alice", "Bob", "Charlie", "Debbie"]
+for i, name in enumerate(names):
+   print(f"name {i} is {name}")
+
+#ALEATORIEDADE
+#geração de números aleatórios pode ser feita com o módulo random
+import random
+random.seed(10) # assim, obteremos semper os mesmos resultados
+four_unifor_randoms = [random.random() for _ in range(4)]
+#random.random() produz números uniformemente entre 0 e 1
+#random.randrange() recebe um ou dois argumentos e retorna um elemento escolhido aleatoriamente no range indicado
+#random.shuffle() reordena aleatoriamente os elementos de uma lista
+#random.choice() escolhe aleatoriamente
+#random.sample() escolhe aleatoriamente sem substituição(sem repetição) 
+lottery_numbers = range(60)
+winning_numbers = random.sample(lottery_numbers, 6)
+print(winning_numbers)
+
+#EXPRESSÕES REGULARES
+import re
+#re.match verifica se o início de uma string corresponde à expressão regular
+#re.search verifica se alguma parte da string corresponde à expressão regular
