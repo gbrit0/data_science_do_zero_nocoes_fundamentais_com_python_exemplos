@@ -268,9 +268,70 @@ four_unifor_randoms = [random.random() for _ in range(4)]
 #random.sample() escolhe aleatoriamente sem substituição(sem repetição) 
 lottery_numbers = range(60)
 winning_numbers = random.sample(lottery_numbers, 6)
-print(winning_numbers)
+print(winning_numbers) #[50, 17, 15, 9, 52, 43] e.g.
 
 #EXPRESSÕES REGULARES
 import re
 #re.match verifica se o início de uma string corresponde à expressão regular
 #re.search verifica se alguma parte da string corresponde à expressão regular
+
+#ZIP E DESCOMPACTAÇÃO DE ARGUMENTO
+#zip = compactação1 
+list1 = ['a', 'b', 'c']
+list2 = [1, 2, 3]
+
+pairs = [pair for pair in zip(list1, list2)] # é [('a', 1), ('b', 2), ('c', 3)]
+
+#também dá pra extrair uma lista
+letters, numbers = zip(*pairs)   # (*) executa a descompactação de argumento é o mesmo que chamar: letters, numbers = zip(('a', 1), ('b', 2), ('c', 3)) 
+
+#ARGS E KWARGS
+def doubler(f):
+   """Aqui definimos uma nova função que mantém uma referência a f"""
+   def g(x):
+      return 2 * f(x)
+   
+   #E retorna a nova função
+   return g
+
+#Funciona em alguns casos:
+def f1(x):
+   return x + 1
+
+g = doubler(f1)
+assert g(3) == 8, "(3 + 1) * 2 should be equal 8"
+assert g(-1) == 0, "(-1 + 1) * 2 should be equal 0"
+
+#No entanto não funciona com funções que recebem mais de um argumento:
+def f2(x, y):
+   return x + y
+
+g = doubler(f2)
+try:
+   g(1, 2)
+except TypeError:
+   print("as defined, g only takes one argument")
+
+#É preciso especificar função que receba argumentos arbitrários usando a descompactação de argumentos:
+
+def magic(*args, **kwargs):
+   print("unammed args:", args)
+   print("keyword args:", kwargs)
+
+magic(1, 2, key="word", key2="word2")
+# Imprime:
+# unammed args: (1, 2)
+# keyword args: {'key': 'word', 'key2': 'word2'}
+
+#args é uma tupla dos argumentos, sem nome
+#kwargs é um dict com os argumentos, nomeados
+
+def doubler_correct(f):
+   """Funciona para qualquer entrada recebiade por f"""
+   def g(*args, **kwargs):
+      """Todo argumento fornecdo para g deve ser transmitido para f"""
+      return 2 * f(*args, **kwargs)
+   return g
+
+g = doubler_correct(f2)
+assert g(1, 2) == 6, "doubler should work now"
