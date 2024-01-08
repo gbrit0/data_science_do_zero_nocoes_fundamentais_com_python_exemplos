@@ -335,3 +335,6 @@ def doubler_correct(f):
 
 g = doubler_correct(f2)
 assert g(1, 2) == 6, "doubler should work now"
+
+#ANOTAÇÕES DE TIPO
+from typing import Union, List, Optional, Dict, Iterable, Tuple, Callable
